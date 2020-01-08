@@ -1,37 +1,44 @@
 import React, { useState } from "react";
+import { catchHttpErrors } from "../utils";
 import { Route, useRouteMatch, Link } from "react-router-dom";
 
-const SearchForPersons = ({ allPersons }) => {
+const SearchByHobby = ({ allHobbies, EndpointFacade }) => {
   const inputfield = { input: "" };
   const [search, setSearch] = useState(inputfield);
-
+  const [filteredData, setFilteredData] = useState([]);
   const match = useRouteMatch();
-  const lowercasedFilter = search.input.toLowerCase();
-  const filteredData = allPersons.filter(item => {
-    return Object.keys(item).some(key =>
-      item[key]
-        .toString()
-        .toLowerCase()
-        .includes(lowercasedFilter)
-    );
-  });
+
+  const handleSubmit = event => {
+    event.preventDefault();
+    EndpointFacade.fetchAllPersonsByHobby(search.input.toLowerCase())
+      .then(data => setFilteredData(data))
+      .catch(catchHttpErrors);
+    event.target.reset();
+  };
 
   const handleChange = event => {
     event.preventDefault();
     setSearch({ ...search, [event.target.id]: event.target.value });
+    setFilteredData([]);
   };
 
   return (
     <div className="col-sm-offset-3 col-sm-9">
-      <h1>Search for persons</h1>
-      <form className="form-horizontal">
+      <h1>Search by hobby</h1>
+      <form
+        className="form-horizontal"
+        onChange={handleChange}
+        onSubmit={handleSubmit}
+      >
         <input
-          onChange={handleChange}
           className="form-control"
           id="input"
-          placeholder="Search by id, phone, emaril, name..."
+          placeholder="Search by hobby like Swimming, Tennis..."
         />
-        {!(search.input === "") ? (
+        <button type="submit" className="btn btn-primary">
+          Get persons
+        </button>
+        {filteredData && filteredData.length && search.input !== "" ? (
           <table className="table">
             <thead>
               <tr className="header">
@@ -41,25 +48,21 @@ const SearchForPersons = ({ allPersons }) => {
                 <th>Name</th>
               </tr>
             </thead>
-            {filteredData && filteredData.length ? (
-              <tbody>
-                {filteredData.map(item => (
-                  <tr key={item.id}>
-                    <td>{item.id}</td>
-                    <td>{item.phone}</td>
-                    <td>{item.email}</td>
-                    <td>
-                      <Link to={`${match.url}/${item.id}`}>
-                        {" "}
-                        {item.firstName} {item.lastName}{" "}
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            ) : (
-              <i>No results were found!</i>
-            )}
+            <tbody>
+              {filteredData.map(item => (
+                <tr key={item.id}>
+                  <td>{item.id}</td>
+                  <td>{item.phone}</td>
+                  <td>{item.email}</td>
+                  <td>
+                    <Link to={`${match.url}/${item.id}`}>
+                      {" "}
+                      {item.firstName} {item.lastName}{" "}
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         ) : null}
       </form>
@@ -67,15 +70,35 @@ const SearchForPersons = ({ allPersons }) => {
       <Route
         path={`${match.path}/:id`}
         render={({ match }) => (
-          <PersonLink match={match} allPersons={allPersons} />
+          <PersonLink match={match} filteredData={filteredData} />
         )}
       />
+      <div>
+        <AllHobbies allHobbies={allHobbies} />
+      </div>
     </div>
   );
 };
 
-const PersonLink = ({ match, allPersons }) => {
-  const chosenPerson = allPersons.find(x => {
+const AllHobbies = ({ allHobbies }) => {
+  return (
+    <div>
+      <h2>A list of all hobbies</h2>
+      {allHobbies && allHobbies.length
+        ? allHobbies.map(hobby => (
+            <ul key={hobby.id}>
+              <li>
+                {hobby.name}, {hobby.description}
+              </li>
+            </ul>
+          ))
+        : null}
+    </div>
+  );
+};
+
+const PersonLink = ({ match, filteredData }) => {
+  const chosenPerson = filteredData.find(x => {
     return x.id == match.params.id;
   });
   return (
@@ -136,4 +159,4 @@ const PersonLink = ({ match, allPersons }) => {
   );
 };
 
-export default SearchForPersons;
+export default SearchByHobby;

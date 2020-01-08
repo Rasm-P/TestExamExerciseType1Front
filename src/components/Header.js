@@ -36,6 +36,11 @@ const Header = ({ loginFacade, loggedIn }) => {
         Search for Persons
         </NavLink>
       </li>
+      <li>
+        <NavLink activeClassName="active" to="/searchbyhobby">
+        Search by Hobby
+        </NavLink>
+      </li>
       {roleHeaders}
       {loginHeaders}
     </ul>

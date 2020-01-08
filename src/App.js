@@ -7,6 +7,7 @@ import LogIn from "./components/LogIn";
 import Header from "./components/Header";
 import Logout from "./components/Logout";
 import SearchForPersons from "./components/SearchForPersons";
+import SearchByHobby from "./components/SearchByHobby";
 import Adminpage from "./components/Adminpage";
 
 const NoMatch = () => {
@@ -17,6 +18,9 @@ function App({ loginFacade, EndpointFacade }) {
   const [loggedIn, setLoggedIn] = useState(false);
   const [allPersons, setAllPersons] = useState([]);
   const [update, setUpdate] = useState(false);
+  console.log(update)
+  const [allHobbies, setAllHobbies] = useState([]);
+  const [allAddresses, setAllAddresses] = useState([]);
 
   // check token regularly
   useEffect(() => {
@@ -28,10 +32,30 @@ function App({ loginFacade, EndpointFacade }) {
   }, []);
 
   useEffect(() => {
+    if (update === false) {
+      return setUpdate(true);
+    }
     EndpointFacade.fetchAllPersons()
       .then(data => setAllPersons(data))
       .catch(catchHttpErrors);
-    setUpdate(false);
+  }, [update]);
+
+  useEffect(() => {
+    if (update === false) {
+      return setUpdate(true);
+    }
+    EndpointFacade.fetchAllHobbies()
+      .then(data => setAllHobbies(data))
+      .catch(catchHttpErrors);
+  }, [update]);
+
+  useEffect(() => {
+    if (update === false) {
+      return setUpdate(true);
+    }
+    EndpointFacade.fetchAllAddresses()
+      .then(data => setAllAddresses(data))
+      .catch(catchHttpErrors);
   }, [update]);
 
   return (
@@ -56,9 +80,11 @@ function App({ loginFacade, EndpointFacade }) {
           />
         </Route>
         <Route path="/searchforpersons">
-          <SearchForPersons
-            loggedIn={loggedIn}
-            allPersons={allPersons}
+          <SearchForPersons allPersons={allPersons} />
+        </Route>
+        <Route path="/searchbyhobby">
+          <SearchByHobby
+            allHobbies={allHobbies}
             EndpointFacade={EndpointFacade}
           />
         </Route>
@@ -68,6 +94,8 @@ function App({ loginFacade, EndpointFacade }) {
             allPersons={allPersons}
             EndpointFacade={EndpointFacade}
             setUpdate={setUpdate}
+            allAddresses={allAddresses}
+            allHobbies={allHobbies}
           />
         </Route>
         <Route>
