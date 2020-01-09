@@ -24,6 +24,7 @@ const Adminpage = props => {
             EndpointFacade={EndpointFacade}
             setIsBlocking={setIsBlocking}
             isBlocking={isBlocking}
+            allHobbies={allHobbies}
           />
           <hr />
           <AddEditDeleteHobbies
@@ -55,7 +56,8 @@ const AddEditDeletePersons = ({
   EndpointFacade,
   setUpdate,
   isBlocking,
-  setIsBlocking
+  setIsBlocking,
+  allHobbies
 }) => {
   const emptyPerson = {
     email: "",
@@ -66,6 +68,7 @@ const AddEditDeletePersons = ({
     address: { id: "", street: "", city: "", zip: "" }
   };
   const [personToAddEdit, setPersonToAddEdit] = useState({ ...emptyPerson });
+  const [hobbyId, setHobbyId] = useState({ hobbyId: "" });
 
   const storeAddEditPerson = person => {
     EndpointFacade.addEditPerson(person).catch(catchHttpErrors);
@@ -219,23 +222,6 @@ const AddEditDeletePersons = ({
             </div>
           </div>
         ))}
-
-        {/* 
-        <div className="form-group">
-            <label className="control-label col-sm-3" htmlFor="{hobby}">
-              New Hobby
-            </label>
-            <div className="col-sm-9">
-              <input
-                className="form-control"
-                id="hobby"
-                placeholder="Enter hobby"
-                value={hobby.id}
-              />
-            </div>
-          </div>
-          */}
-
         <div className="form-group">
           <div className="col-sm-offset-3 col-sm-9">
             <button type="submit" className="btn btn-primary">
@@ -244,6 +230,50 @@ const AddEditDeletePersons = ({
           </div>
         </div>
       </form>
+
+      <form
+        className="form-group"
+        onChange={event => {
+          const target = event.target;
+          const name = target.id;
+          const value =
+            target.type === "checkbox" ? target.checked : target.value;
+          setHobbyId({ ...hobbyId, [name]: value });
+          setIsBlocking(true);
+        }}
+        onSubmit={event => {
+          event.preventDefault();
+          const hobby = allHobbies.find(x => {
+            return x.id == hobbyId.hobbyId;
+          });
+          if (hobbyId.hobbyId != "" && hobby != "null") {
+            personToAddEdit.hobbyList.push(hobby);
+            setHobbyId({ hobbyId: "" });
+            event.target.reset();
+            setIsBlocking(false);
+          } else {
+            window.alert(
+              "Plase change the values in the fields before submition!"
+            );
+          }
+        }}
+      >
+        <label className="control-label col-sm-3" htmlFor="hobbyId">
+          New Hobby
+        </label>
+        <div className="col-sm-9">
+          <input
+            className="form-control"
+            id="hobbyId"
+            placeholder="Enter hobby id"
+            value={hobbyId.hobbyId}
+          />
+        </div>
+        <button type="submit" className="btn btn-primary">
+          Add hobby
+        </button>
+      </form>
+
       <table className="table">
         <thead>
           <tr>

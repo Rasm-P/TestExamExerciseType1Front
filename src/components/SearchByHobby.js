@@ -105,7 +105,7 @@ const PersonLink = ({ match, filteredData }) => {
     <div>
       {chosenPerson != null ? (
         <div>
-          <Link to={`/searchforpersons`}>
+          <Link to={`/searchbyhobby`}>
             <h5>
               {chosenPerson.firstName} {chosenPerson.lastName} information
             </h5>
