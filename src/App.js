@@ -30,7 +30,6 @@ function App({ loginFacade, EndpointFacade }) {
   }, []);
 
   useEffect(() => {
-    console.log("persons");
     setUpdate(false)
     EndpointFacade.fetchAllPersons()
       .then(data => setAllPersons(data))
@@ -38,14 +37,12 @@ function App({ loginFacade, EndpointFacade }) {
   }, [update]);
 
   useEffect(() => {
-    console.log("hobbies");
     EndpointFacade.fetchAllHobbies()
       .then(data => setAllHobbies(data))
       .catch(catchHttpErrors);
   }, [update]);
 
   useEffect(() => {
-    console.log("addresses");
     EndpointFacade.fetchAllAddresses()
       .then(data => setAllAddresses(data))
       .catch(catchHttpErrors);

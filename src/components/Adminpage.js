@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import { Redirect, Prompt } from "react-router-dom";
 import { catchHttpErrors } from "../utils";
 
-const Adminpage = ({
-  loggedIn,
-  setUpdate,
-  EndpointFacade,
-  allPersons,
-  allAddresses,
-  allHobbies
-}) => {
+const Adminpage = props => {
+  const {
+    loggedIn,
+    setUpdate,
+    EndpointFacade,
+    allPersons,
+    allAddresses,
+    allHobbies
+  } = props;
   const [isBlocking, setIsBlocking] = useState(false);
   return (
     <div className="col-sm-offset-3 col-sm-9">
@@ -64,15 +65,10 @@ const AddEditDeletePersons = ({
     hobbyList: [],
     address: { id: "", street: "", city: "", zip: "" }
   };
-  const [personToAddEdit, setPersonToAddEdit] = useState(emptyPerson);
+  const [personToAddEdit, setPersonToAddEdit] = useState({ ...emptyPerson });
 
   const storeAddEditPerson = person => {
-    EndpointFacade.addEditPerson(person)
-      .then(data => {
-        setPersonToAddEdit(data);
-      })
-      .catch(catchHttpErrors);
-    setUpdate(true);
+    EndpointFacade.addEditPerson(person).catch(catchHttpErrors);
   };
 
   const deletePerson = id => {
@@ -108,9 +104,10 @@ const AddEditDeletePersons = ({
         "Values to be submitted: " + JSON.stringify(personToAddEdit)
       );
       storeAddEditPerson(personToAddEdit);
+      setPersonToAddEdit({ ...emptyPerson });
       event.target.reset();
       setIsBlocking(false);
-      setPersonToAddEdit(emptyPerson);
+      setUpdate(true);
     } else {
       window.alert("Plase change the values in the fields before submition!");
     }
@@ -306,15 +303,10 @@ const AddEditDeleteHobbies = ({
     name: "",
     description: ""
   };
-  const [hobbyToAddEdit, setHobbyToAddEdit] = useState(emptyHobby);
+  const [hobbyToAddEdit, setHobbyToAddEdit] = useState({ ...emptyHobby });
 
   const storeAddEditHobby = hobby => {
-    EndpointFacade.addEditHobby(hobby)
-      .then(data => {
-        setHobbyToAddEdit(data);
-      })
-      .catch(catchHttpErrors);
-    setUpdate(true);
+    EndpointFacade.addEditHobby(hobby).catch(catchHttpErrors);
   };
 
   const deleteHobby = id => {
@@ -340,9 +332,10 @@ const AddEditDeleteHobbies = ({
     if (hobbyToAddEdit != emptyHobby) {
       window.alert("Values to be submitted: " + JSON.stringify(hobbyToAddEdit));
       storeAddEditHobby(hobbyToAddEdit);
+      setHobbyToAddEdit({ ...emptyHobby });
       event.target.reset();
       setIsBlocking(false);
-      setHobbyToAddEdit(emptyHobby);
+      setUpdate(true);
     } else {
       window.alert("Plase change the values in the fields before submition!");
     }
@@ -465,15 +458,10 @@ const AddEditDeleteAddresses = ({
     zip: "",
     personList: []
   };
-  const [addressToAddEdit, setAddressToAddEdit] = useState(emptyAddress);
+  const [addressToAddEdit, setAddressToAddEdit] = useState({ ...emptyAddress });
 
   const storeAddEditAddress = address => {
-    EndpointFacade.addEditAddress(address)
-      .then(data => {
-        setAddressToAddEdit(data);
-      })
-      .catch(catchHttpErrors);
-    setUpdate(true);
+    EndpointFacade.addEditAddress(address).catch(catchHttpErrors);
   };
 
   const deleteAddress = id => {
@@ -501,9 +489,10 @@ const AddEditDeleteAddresses = ({
         "Values to be submitted: " + JSON.stringify(addressToAddEdit)
       );
       storeAddEditAddress(addressToAddEdit);
+      setAddressToAddEdit({ ...emptyAddress });
       event.target.reset();
       setIsBlocking(false);
-      setAddressToAddEdit(emptyAddress);
+      setUpdate(true);
     } else {
       window.alert("Plase change the values in the fields before submition!");
     }
