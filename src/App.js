@@ -18,11 +18,9 @@ function App({ loginFacade, EndpointFacade }) {
   const [loggedIn, setLoggedIn] = useState(false);
   const [allPersons, setAllPersons] = useState([]);
   const [update, setUpdate] = useState(false);
-  console.log(update)
   const [allHobbies, setAllHobbies] = useState([]);
   const [allAddresses, setAllAddresses] = useState([]);
 
-  // check token regularly
   useEffect(() => {
     const interval = setInterval(() => {
       setLoggedIn(loginFacade.loggedIn());
@@ -32,27 +30,22 @@ function App({ loginFacade, EndpointFacade }) {
   }, []);
 
   useEffect(() => {
-    if (update === false) {
-      return setUpdate(true);
-    }
+    console.log("persons");
+    setUpdate(false)
     EndpointFacade.fetchAllPersons()
       .then(data => setAllPersons(data))
       .catch(catchHttpErrors);
   }, [update]);
 
   useEffect(() => {
-    if (update === false) {
-      return setUpdate(true);
-    }
+    console.log("hobbies");
     EndpointFacade.fetchAllHobbies()
       .then(data => setAllHobbies(data))
       .catch(catchHttpErrors);
   }, [update]);
 
   useEffect(() => {
-    if (update === false) {
-      return setUpdate(true);
-    }
+    console.log("addresses");
     EndpointFacade.fetchAllAddresses()
       .then(data => setAllAddresses(data))
       .catch(catchHttpErrors);

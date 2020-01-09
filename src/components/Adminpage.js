@@ -72,12 +72,12 @@ const AddEditDeletePersons = ({
         setPersonToAddEdit(data);
       })
       .catch(catchHttpErrors);
-    setUpdate(false);
+    setUpdate(true);
   };
 
   const deletePerson = id => {
     EndpointFacade.deletePerson(id).catch(catchHttpErrors);
-    setUpdate(false);
+    setUpdate(true);
   };
 
   const editPerson = person => {
@@ -95,7 +95,6 @@ const AddEditDeletePersons = ({
 
   function handleSubmit(event) {
     event.preventDefault();
-    setIsBlocking(false);
     const address = allAddresses.find(x => {
       return x.id == personToAddEdit.address;
     });
@@ -110,6 +109,7 @@ const AddEditDeletePersons = ({
       );
       storeAddEditPerson(personToAddEdit);
       event.target.reset();
+      setIsBlocking(false);
       setPersonToAddEdit(emptyPerson);
     } else {
       window.alert("Plase change the values in the fields before submition!");
@@ -314,12 +314,12 @@ const AddEditDeleteHobbies = ({
         setHobbyToAddEdit(data);
       })
       .catch(catchHttpErrors);
-    setUpdate(false);
+    setUpdate(true);
   };
 
   const deleteHobby = id => {
     EndpointFacade.deleteHobby(id).catch(catchHttpErrors);
-    setUpdate(false);
+    setUpdate(true);
   };
 
   const editHobby = hobby => {
@@ -337,11 +337,11 @@ const AddEditDeleteHobbies = ({
 
   function handleSubmit(event) {
     event.preventDefault();
-    setIsBlocking(false);
     if (hobbyToAddEdit != emptyHobby) {
       window.alert("Values to be submitted: " + JSON.stringify(hobbyToAddEdit));
       storeAddEditHobby(hobbyToAddEdit);
       event.target.reset();
+      setIsBlocking(false);
       setHobbyToAddEdit(emptyHobby);
     } else {
       window.alert("Plase change the values in the fields before submition!");
@@ -473,12 +473,12 @@ const AddEditDeleteAddresses = ({
         setAddressToAddEdit(data);
       })
       .catch(catchHttpErrors);
-    setUpdate(false);
+    setUpdate(true);
   };
 
   const deleteAddress = id => {
     EndpointFacade.deleteAddress(id).catch(catchHttpErrors);
-    setUpdate(false);
+    setUpdate(true);
   };
 
   const editAddress = address => {
@@ -496,13 +496,13 @@ const AddEditDeleteAddresses = ({
 
   function handleSubmit(event) {
     event.preventDefault();
-    setIsBlocking(false);
     if (addressToAddEdit != emptyAddress) {
       window.alert(
         "Values to be submitted: " + JSON.stringify(addressToAddEdit)
       );
       storeAddEditAddress(addressToAddEdit);
       event.target.reset();
+      setIsBlocking(false);
       setAddressToAddEdit(emptyAddress);
     } else {
       window.alert("Plase change the values in the fields before submition!");
